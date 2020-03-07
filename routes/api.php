@@ -22,7 +22,6 @@ Route::namespace('Api')->group(function(){
   Route::apiResource('films','FilmController');
 
 });
-Route::resource('Ateliers','Api\AtelierController');
 
 Route::post('login', 'Api\UserController@login');
   Route::post('register', 'Api\UserController@register');
@@ -34,5 +33,6 @@ Route::resource('products','Api\ProductController');
 Route::resource('Participants','Api\ParticipantController');
 
 Route::post('Participant/inscription/{id}','Api\ParticipantController@subscription');
+Route::resource('Ateliers','Api\AtelierController');
 
 });
