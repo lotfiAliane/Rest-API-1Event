@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel
+## About Rest-API-1Event
 
 Mise en place D'une API-Rest avec le Framwork Laravel6 Sécurisé avec PAssport & JWT et utilisation du protocole OAuth2 pour l'accées aux ressources
 
