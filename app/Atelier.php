@@ -11,6 +11,6 @@ class Atelier extends Model
 
     public function participants()
     {
-        return $this->belongsToMany(App\Participant::class);
+        return $this->belongsToMany('App\Participant','participant__ateliers','atelier_id','participant_id')->withPivot('type');;
     }
 }

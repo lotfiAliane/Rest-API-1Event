@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Atelier;
+use App\book;
 
-class AtelierController extends Controller
+class bookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,7 @@ class AtelierController extends Controller
      */
     public function index()
     {
-      $ateliers = Atelier::with('participants')->get();
-      return response()->json(['ateliers'=>$ateliers],200);
-
+        //
     }
 
     /**
@@ -38,8 +35,8 @@ class AtelierController extends Controller
      */
     public function store(Request $request)
     {
-        $atelier=Atelier::create($request->all());
-        return response()->json(['atelier'=> $atelier],200);
+         $book=book::create($this->validateRequest());
+         return  redirect($book->path());
     }
 
     /**
@@ -50,13 +47,7 @@ class AtelierController extends Controller
      */
     public function show($id)
     {
-        $atelier= Atelier::where('id',$id)->with('participants')->first();
-        if($atelier)
-        {
-          return response()->json(['atelier'=>$atelier],200);
-        }
-        else
-        return response()->json(['error'=> 'not Found'],404);
+        //
     }
 
     /**
@@ -77,16 +68,10 @@ class AtelierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Book $book)
     {
-        $atelier=Atelier::find($id);
-        if($atelier)
-        {
-          $atelier->update($request->all());
-          return response()->json(['atelier'=>$atelier,'status'=> 200],200);
-        }
-        else
-        return response()->json(['error'=>'not found'],404);
+        $book->update($this->validateRequest());
+        return  redirect($book->path());
     }
 
     /**
@@ -95,17 +80,17 @@ class AtelierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Book $book)
     {
-        //
-        $atelier=Atelier::find($id);
-        if($atelier)
-        {
-          $atelier->delete();
-          return response()->json(['atelier'=>$atelier],200);
-        }
-        else
-        return response()->json(['error'=>'not found'],404);
+        $book->delete();
+        return redirect('/books');
+    }
 
+    public function validateRequest()
+    {
+       return request()->validate([
+            'title'=> 'required',
+            'author'=>'required',
+        ]);
     }
 }

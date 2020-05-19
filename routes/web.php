@@ -26,3 +26,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('films','FilmController');
+Route::resource('customers','customerController');
+Route::get('customers/{id}/update','customerController@update');
+
+
+Route::post('/books', 'bookController@store');
+Route::resource('books', 'bookController');

@@ -29,9 +29,9 @@ class Accueil
     {
         //
 
-        DB::table('visits')->insert([
+      /*  DB::table('visits')->insert([
             'ip' => request()->ip(),
         ]);
-
+        */
     }
 }

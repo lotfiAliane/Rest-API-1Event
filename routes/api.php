@@ -21,18 +21,23 @@ Route::namespace('Api')->group(function(){
 
   Route::apiResource('films','FilmController');
 
-});
+
+  });
 
 Route::post('login', 'Api\UserController@login');
   Route::post('register', 'Api\UserController@register');
 Route::group(['middleware' => 'auth:api'], function(){
+  Route::resource('Ateliers','Api\AtelierController');
+
   Route::post('details', 'Api\UserController@details');
+  
+  Route::resource('Participants','Api\ParticipantController');
+  Route::post('Participant/inscription/{id}','Api\ParticipantController@subscription');
+  Route::get('Participant/{num}','Api\ParticipantController@participantByNum');
+
+
 
 Route::resource('products','Api\ProductController');
 
-Route::resource('Participants','Api\ParticipantController');
-
-Route::post('Participant/inscription/{id}','Api\ParticipantController@subscription');
-Route::resource('Ateliers','Api\AtelierController');
 
 });

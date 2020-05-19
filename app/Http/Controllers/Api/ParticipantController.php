@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Participant;
 
+use function GuzzleHttp\json_encode;
+
 class ParticipantController extends Controller
 {
 
@@ -19,7 +21,7 @@ class ParticipantController extends Controller
     public function index()
     {
         $participant=Participant::all();
-        return response()->json(['participants'=>$participant],$successStatus);
+        return response()->json(['participants'=>$participant],$this->successStatus);
     }
 
     /**
@@ -73,6 +75,19 @@ class ParticipantController extends Controller
         //
     }
 
+    public function participantByNum($num)
+    {
+      $participant= Participant::where('phone',$num)->with('ateliers')->first();
+      if($participant)
+      {
+          return response()->json(['participant'=> $participant],200);
+      }
+      else
+      {
+        return response()->json(['error'=>'participant does not exist'],401);
+      }
+    }
+
     /**
      * Update the specified response in storage.
      *
@@ -86,7 +101,7 @@ class ParticipantController extends Controller
         if($participant)
         {
           $participant->update($request->all());
-          return response()->json(['participant'=>$participant],$successStatus);
+          return response()->json(['participant'=>$participant],$this->successStatus);
         }
         return response()->json(['error'=>'participant dont existe'],401);
     }
@@ -103,11 +118,11 @@ class ParticipantController extends Controller
         if($participant)
         {
             $participant->delete();
-            return response()->json(['participant'=>$participant],$successStatus);
+            return response()->json(['participant'=>$participant],$this->successStatus);
         }
         else
 
-        return response()->json(['participant'=>$participant],$successStatus);
+        return response()->json(['participant'=>$participant],$this->successStatus);
     }
     public function subscription(Request $request,$id)
     {
@@ -117,31 +132,54 @@ class ParticipantController extends Controller
   /* if ( ! $participant->ateliers()->sync($request->ids)) {
     return response()->json(['participant'=>$participant],404);
 }*/
-foreach ($request->ids as $idy) {
-  $atelier=\App\Atelier::find($idy);
+$ateliers=$request->all();
+if(count($participant->ateliers))
+{
+  foreach($participant->ateliers as $atelier)
+  {
+    if($atelier->places > 0 ){
+      $atelier->places =$atelier->places +1;
+
+    }
+    else
+
+    {
+      $atelier->reserve= $atelier->reserve +1;
+    }
+    $atelier->update();
+  }
+ $participant->ateliers()->detach();
+}
+$participant=Participant::find($id);
+foreach ($ateliers as $idy) {
+  $atelier=\App\Atelier::find($idy['id']);
+  
   if( $participant->ateliers->contains($atelier)   )
     {
     }
     else {
-      $participant->ateliers()->syncWithoutDetaching($atelier);
+      
           if($atelier->places>0)
           {
             $atelier->places=$atelier->places-1;
+            $participant->ateliers()->attach( $atelier , ['type' => 'confirmer']);
           }
           else
           {
             if($atelier->reserve >0 )
             {
               $atelier->reserve=$atelier->reserve-1;
+              $participant->ateliers()->attach($atelier , ['type' => 'reserve']);
             }
           }
           $atelier->update();
     }
 
 }
-//$participant=Participant::find($id)->with('ateliers')->get();
-$participant=Participant::find($id);
-      return response()->json(['participant'=>$participant->ateliers],200);
+$participant=Participant::find($id)->with('ateliers')->first();
+
+
+      return response()->json(['participant'=>$participant],200);
 
     }
 }
