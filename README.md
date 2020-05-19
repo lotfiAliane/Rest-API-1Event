@@ -12,4 +12,4 @@
 Mise en place D'une API-Rest avec le Framwork Laravel6 Sécurisé avec PAssport & JWT et utilisation du protocole OAuth2 pour l'accées aux ressources
 
 
-<img src="https://drive.google.com/open?id=13ylHMpDuDkLWodaLYQ0uItB-PboYJLUJ" >
+<img src="https://drive.google.com/uc?id=13ylHMpDuDkLWodaLYQ0uItB-PboYJLUJ">
